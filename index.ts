@@ -14,8 +14,6 @@ async function run() {
         console.log("Azure Storage Container Name: " + containerName);
         console.log("Source Directory Path: " + sourceDirectoryPath);
 
-        console.log("Copying file to Azure Blob Storage");
-
         let blob = azure.createBlobService()
                                .withFilter(new azure.ExponentialRetryPolicyFilter());
         blob.createContainerIfNotExists(containerName, {
@@ -36,6 +34,8 @@ async function run() {
 }
 
 function uploadBlobs(blob, sourceDirectoryPath, containerName, callback) {
+    console.log("Uploading " + sourceDirectoryPath + " to Azure Blob Storage");
+    
   // validate directory is valid.
   if (!fs.existsSync(sourceDirectoryPath)) {
     console.log(sourceDirectoryPath + ' is an invalid directory path.');
