@@ -1,0 +1,61 @@
+{
+    "id": "3e76c0aa-f53a-4b86-bf56-9d9382de00a5",
+    "name": "CopyToAzureBlob",
+    "friendlyName": "CopyToAzureBlob",
+    "description": "Copy files to Azure Blob Storage",
+    "helpMarkDown": "",
+    "category": "Utility",
+    "author": "jocollin",
+    "version": {
+        "Major": 0,
+        "Minor": 1,
+        "Patch": 0
+    },
+    "instanceNameFormat": "Echo $(samplestring)",
+    "groups": [
+        {
+            "name": "advanced",
+            "displayName": "Advanced",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "azureconnectionstring",
+            "type": "string",
+            "label": "Azure ConnectionString",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "An Azure Storage ConnectionString"
+        },
+        {
+            "name": "azureblobcontainername",
+            "type": "string",
+            "label": "Azure Blob Container Name",
+            "defaultValue": "vstsupload",
+            "required": false,
+            "helpMarkDown": "The name of the Azure Blob Storage container"
+        },
+        {
+            "name": "targetpath",
+            "type": "string",
+            "label": "Target path",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "Folder path off file to upload to Azure Blob Storage"
+        },
+        {
+            "name": "targetfile",
+            "type": "string",
+            "label": "Target file",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "File path off file to upload to Azure Blob Storage"
+        }
+    ],
+    "execution": {
+        "Node": {
+            "target": "index.js"
+        }
+    }
+}
