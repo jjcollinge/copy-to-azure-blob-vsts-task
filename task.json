@@ -37,20 +37,12 @@
             "helpMarkDown": "The name of the Azure Blob Storage container"
         },
         {
-            "name": "targetpath",
+            "name": "sourcedirpath",
             "type": "string",
-            "label": "Target path",
+            "label": "Source Directory Path",
             "defaultValue": "false",
             "required": false,
-            "helpMarkDown": "Folder path off file to upload to Azure Blob Storage"
-        },
-        {
-            "name": "targetfile",
-            "type": "string",
-            "label": "Target file",
-            "defaultValue": "false",
-            "required": false,
-            "helpMarkDown": "File path off file to upload to Azure Blob Storage"
+            "helpMarkDown": "Source directory to upload to Azure Blob Storage"
         }
     ],
     "execution": {
