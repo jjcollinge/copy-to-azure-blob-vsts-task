@@ -17,11 +17,10 @@ async function run() {
     let containerName : string = tl.getInput("azureblobcontainername", true);
     let sourcePath : string = tl.getPathInput("sourcepath", true);
 
-    let blob = azure.createBlobService()
+    var blob = azure.createBlobService()
       .withFilter(new azure.ExponentialRetryPolicyFilter());
-    blob.createContainerIfNotExists(containerName, {
-      publicAccessLevel: 'blob',
-    }, function (error, result, response) {
+    blob.createContainerIfNotExists(containerName, 
+    function (error, result, response) {
       if (!error) {
         let isDirectory = fs.lstatSync(sourcePath).isDirectory();
         if (isDirectory) {
