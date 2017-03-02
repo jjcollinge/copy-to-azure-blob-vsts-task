@@ -11,14 +11,7 @@
         "Minor": 1,
         "Patch": 0
     },
-    "instanceNameFormat": "Echo $(samplestring)",
-    "groups": [
-        {
-            "name": "advanced",
-            "displayName": "Advanced",
-            "isExpanded": false
-        }
-    ],
+    "instanceNameFormat": "Copy files to Azure",
     "inputs": [
         {
             "name": "azureconnectionstring",
@@ -37,12 +30,12 @@
             "helpMarkDown": "The name of the Azure Blob Storage container"
         },
         {
-            "name": "sourcedirpath",
-            "type": "string",
-            "label": "Source Directory Path",
+            "name": "sourcepath",
+            "type": "path",
+            "label": "Source Path",
             "defaultValue": "false",
             "required": true,
-            "helpMarkDown": "Source directory to upload to Azure Blob Storage"
+            "helpMarkDown": "Source path to upload to Azure Blob Storage"
         }
     ],
     "execution": {

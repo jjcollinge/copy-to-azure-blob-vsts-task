@@ -4,15 +4,18 @@ import azure = require('azure-storage');
 import utils = require('./utils');
 import fs = require('fs');
 
+function failTask(message: string) {
+    throw new FailTaskError(message);
+}
+
+export class FailTaskError extends Error {
+}
+
 async function run() {
   try {
-    let azureConnectionString = process.env["AZURE_STORAGE_CONNECTION_STRING"];
-    let containerName = process.env["AZURE_STORAGE_CONTAINER_NAME"];
-    let sourcePath = process.env["SOURCE_DIR_PATH"];
-
-    console.log("Azure ConnectionString: " + azureConnectionString);
-    console.log("Azure Storage Container Name: " + containerName);
-    console.log("Source Directory Path: " + sourcePath);
+    let azureConnectionString : string = tl.getInput("azureconnectionstring", true);
+    let containerName : string = tl.getInput("azureblobcontainername", true);
+    let sourcePath : string = tl.getPathInput("sourcepath", true);
 
     let blob = azure.createBlobService()
       .withFilter(new azure.ExponentialRetryPolicyFilter());
@@ -23,20 +26,20 @@ async function run() {
         let isDirectory = fs.lstatSync(sourcePath).isDirectory();
         if (isDirectory) {
           uploadDirectoryBlobs(blob, sourcePath, containerName, function () {
-            console.log("Finished copying directory to Azure Blob Storage");
+            tl.debug("Finished copying directory to Azure Blob Storage");
           });
         } else {
           let isFile = fs.lstatSync(sourcePath).isFile();
           if (isFile) {
             uploadFileBlob(blob, sourcePath, containerName, function () {
-              console.log("Finished copying file to Azure Blob Storage");
+              tl.debug("Finished copying file to Azure Blob Storage");
             });
           } else {
-            throw "Invalid file/directory path provided";
+            failTask(tl.loc("InvalidSourcePath", sourcePath));
           }
         }
       } else {
-        throw (error);
+        failTask(tl.loc("FailedToCreateBlobContainer", error.message));
       }
     });
   }
@@ -46,25 +49,25 @@ async function run() {
 }
 
 function uploadFileBlob(blob, sourceFilePath, containerName, callback) {
-  console.log("Uploading file '" + sourceFilePath + "' to Azure Blob Storage");
+  tl.debug("Uploading file '" + sourceFilePath + "' to Azure Blob Storage");
 
   var blobName = sourceFilePath.replace(/^.*[\\\/]/, '');
   blob.createBlockBlobFromLocalFile(containerName, blobName, sourceFilePath, function (error) {
     if (error) {
-      console.log(error);
+      failTask(tl.loc("FailedToCreateBlobFromLocalFile", error.message));
     } else {
-      console.log(' Blob ' + blobName + ' upload finished.');
+      tl.debug(' Blob ' + blobName + ' upload finished.');
     }
   });
 }
 
 function uploadDirectoryBlobs(blob, sourceDirectoryPath, containerName, callback) {
-  console.log("Uploading directory '" + sourceDirectoryPath + "' to Azure Blob Storage");
+  tl.debug("Uploading directory '" + sourceDirectoryPath + "' to Azure Blob Storage");
 
   // Search the directory and generate a list of files to upload.
   utils.walk(sourceDirectoryPath, function (error, files) {
     if (error) {
-      console.log(error);
+      tl.loc("FailedToWalkDirectory", error.message)
     } else {
       var finished = 0;
 
@@ -74,13 +77,13 @@ function uploadDirectoryBlobs(blob, sourceDirectoryPath, containerName, callback
           finished++;
 
           if (error) {
-            console.log(error);
+            tl.loc("FailedToCreateBlobFromFile", error.message)
           } else {
-            console.log(' Blob ' + file + ' upload finished.');
+            tl.debug(' Blob ' + file + ' upload finished.');
 
             if (finished === files.length) {
               // Wait until all workers complete and the blobs are uploaded to the server.
-              console.log('All files uploaded');
+              tl.debug('All files uploaded');
               callback();
             }
           }
