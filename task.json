@@ -33,7 +33,7 @@
             "type": "string",
             "label": "Azure Blob Container Name",
             "defaultValue": "vstsupload",
-            "required": false,
+            "required": true,
             "helpMarkDown": "The name of the Azure Blob Storage container"
         },
         {
@@ -41,7 +41,7 @@
             "type": "string",
             "label": "Source Directory Path",
             "defaultValue": "false",
-            "required": false,
+            "required": true,
             "helpMarkDown": "Source directory to upload to Azure Blob Storage"
         }
     ],
